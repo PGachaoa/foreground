@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>修改密码</title>
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/form.css">
+</head>
+
+<body>
+  <div class="header container">修改密码
+    <p style="display: block;">     
+      <a href="./index.html" id="homeLink">回到首页</a>
+    </p>
+  </div id="passwordFormContainer" style="display: none;">
+  <form id="passwordForm">
+    <span class="error" style="display: none;">修改密码错误！</span>
+    <label>
+      原始密码： <input type="text" class="oldpassword" required>
+    </label>
+    <label>
+      新密码： <input type="text" class="newpassword" required>
+    </label>
+    <label>
+      确认新密码： <input type="text" class="rnewpassword" required>
+    </label>
+    <button>确认修改</button>
+  </form>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var passwordForm = document.getElementById('passwordForm');
+      var errorSpan = document.querySelector('.error');
+      var homeLink = document.getElementById('homeLink');
+      
+      // 假设我们通过localStorage来检查用户登录状态
+      var userLoggedIn = localStorage.getItem('userLoggedIn');
+      
+      // 用户是否已经登录的校验
+      if (!userLoggedIn) {
+        alert('请先登录！');
+        window.location.href = 'login.html'; // 用户未登录，跳转到登录页面
+      } else {
+        // 用户已登录，显示修改密码表单
+        document.getElementById('passwordFormContainer').style.display = 'block';
+      }
+
+      // 表单提交事件处理
+      passwordForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        var oldPassword = document.querySelector('.oldpassword').value;
+        var newPassword = document.querySelector('.newpassword').value;
+        var rNewPassword = document.querySelector('.rnewpassword').value;
+        var passwordRegex = /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/; // 示例正则表达式
+
+        // 重置错误消息
+        errorSpan.style.display = 'none';
+        errorSpan.textContent = '';
+
+        // 表单校验
+        if (!oldPassword || !newPassword || !rNewPassword) {
+          errorSpan.textContent = '所有字段都不能为空！';
+          errorSpan.style.display = 'block';
+          return;
+        }
+        if (!passwordRegex.test(newPassword)) {
+          errorSpan.textContent = '新密码格式不正确，必须包含字母和数字！';
+          errorSpan.style.display = 'block';
+          return;
+        }
+        if (newPassword !== rNewPassword) {
+          errorSpan.textContent = '两次输入的新密码不一致！';
+          errorSpan.style.display = 'block';
+          return;
+        }
+
+        // 假设修改密码成功，这里应添加实际的密码修改逻辑
+        alert('密码修改成功！');
+        // 实际应用中，应发送请求到服务器进行密码更新
+        // ...
+
+        // 清空表单
+        passwordForm.reset();
+      });
+    });
+  </script>
+</body>
+
+</html>

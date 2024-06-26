@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>注册页面</title>
+  <link rel="stylesheet" href="../css/base.css"> <!-- 引入基础CSS样式 -->
+  <link rel="stylesheet" href="../css/form.css"> <!-- 引入表单专用CSS样式 -->
+</head>
+<body>
+  <div class="header container">注册页面</div> <!-- 页面顶部显示标题 '注册页面' -->
+  <form id="form"> <!-- 表单开始 -->
+    <span class="error" style="display: none;">错误消息</span> <!-- 用于显示错误信息的元素，初始隐藏 -->
+    <label>
+      用户名：&nbsp;&nbsp; <input type="text" class="username"> <!-- 用户名输入框 -->
+    </label>
+    <label>
+      密&nbsp;&nbsp;&nbsp;码：&nbsp;&nbsp;<input type="password" class="password"> <!-- 密码输入框 -->
+    </label>
+    <label>
+      确认密码：&nbsp;&nbsp;<input type="password" class="rpassword"> <!-- 确认密码输入框 -->
+    </label>
+    <label>
+      昵&nbsp;&nbsp;&nbsp;称：&nbsp;&nbsp; <input type="text" class="nickname"> <!-- 昵称输入框 -->
+    </label>
+    <p>已有账号，<a href="./login.html">直接登录</a></p> <!-- 提供一个链接到登录页面的链接 -->
+    <button type="submit">注册</button> <!-- 注册按钮 -->
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var registerForm = document.querySelector('form'); // 获取表单元素
+      var usernameInput = document.querySelector('.username'); // 获取用户名输入框
+      var passwordInput = document.querySelector('.password'); // 获取密码输入框
+      var rpasswordInput = document.querySelector('.rpassword'); // 获取确认密码输入框
+      var nicknameInput = document.querySelector('.nickname'); // 获取昵称输入框
+      var errorSpan = document.querySelector('.error'); // 获取错误消息显示元素
+
+      function resetErrorMessage() {
+        errorSpan.textContent = ''; // 清空错误消息
+        errorSpan.style.display = 'none'; // 隐藏错误消息元素
+      }
+
+      function validatePassword(password) {
+        const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // 密码验证规则：至少包含一个数字，一个小写和一个大写字母，长度为6-20字符
+        return regex.test(password); // 返回密码是否符合规则
+      }
+
+      registerForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止表单的默认提交事件
+        resetErrorMessage(); // 重置错误消息
+
+        var username = usernameInput.value.trim(); // 获取并清理用户名
+        var password = passwordInput.value.trim(); // 获取并清理密码
+        var rpassword = rpasswordInput.value.trim(); // 获取并清理确认密码
+        var nickname = nicknameInput.value.trim(); // 获取并清理昵称
+
+        if (!username || !password || !rpassword || !nickname) {
+          errorSpan.textContent = '所有字段都不能为空！'; // 设置错误消息
+          errorSpan.style.display = 'block'; // 显示错误消息元素
+          return;
+        }
+
+        if (!validatePassword(password)) {
+          errorSpan.textContent = '密码必须包含至少一个数字和一个大写和小写字母，且长度为6-20个字符。'; // 设置错误消息
+          errorSpan.style.display = 'block'; // 显示错误消息元素
+          return;
+        }
+
+        if (password !== rpassword) {
+          errorSpan.textContent = '两次密码输入不一致！'; // 设置错误消息
+          errorSpan.style.display = 'block'; // 显示错误消息元素
+          return;
+        }
+
+        fetch('/api/register', {
+          method: 'POST', // HTTP 方法 POST
+          headers: {
+            'Content-Type': 'application/json' // 设置请求头内容类型为 JSON
+          },
+          body: JSON.stringify({ username, password, nickname }) // 将用户名、密码和昵称转换为 JSON 字符串作为请求体
+        })
+        .then(response => response.json()) // 将响应转换为 JSON
+        .then(data => {
+          if (data.success) {
+            alert('注册成功！'); // 注册成功提示
+            window.location.href = 'login.html'; // 跳转至登录页面
+          } else {
+            errorSpan.textContent = data.message || '注册失败，请重试！'; // 显示注册失败信息
+            errorSpan.style.display = 'block'; // 显示错误信息展示元素
+          }
+        })
+        .catch(error => {
+          console.error('注册请求失败:', error); // 控制台打印错误
+          errorSpan.textContent = '注册请求失败，请稍后重试！'; // 显示请求失败信息
+          errorSpan.style.display = 'block'; // 显示错误信息展示元素
+        });
+      });
+    });
+    
+  </script>
+</body>
+</html>

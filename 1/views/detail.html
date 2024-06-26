@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>商品详情页</title>
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/detail.css">
+</head>
+
+<body>
+  <div class="header container">
+    商品详情页
+    <p style="display: block;">
+      <a href="./list.html">回到列表页</a> <!-- 链接回商品列表页 -->
+    </p>
+  </div>
+
+  <div class="content container">
+    <div class="left box">
+      <div class="middleBox">
+        <img src="https://image5.suning.cn/uimg/b2c/newcatentries/0070081143-000000000144879464_2_800x800.jpg" alt="商品图片" class="middleimg">
+      </div>
+    </div>
+    <div class="right">
+      <p class="title">商品名称</p>
+      <p class="price">原价: ¥ <span class="old">25.00</span></p>
+      <p class="price">折扣: <span class="discount">0.7</span></p>
+      <p class="price">现价: ¥ <span class="curprice">17.50</span></p>
+    </div>
+  </div>
+
+  <div class="desc container">
+    <div class="lazyimg">
+      <!-- 商品详细信息的占位符，实际内容需后端提供 -->
+      <div moduleid="R9001233_3" modulename="商品详情">
+        <p>商品详细信息等介绍...</p>
+      </div>
+      <div moduleid="R9001233_4" modulename="商品尺码表">
+        <p>尺码表信息...</p>
+      </div>
+      <div moduleid="R9001233_5" modulename="模特效果">
+        <p>模特效果展示...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="../lib/yourScript.js"></script> <!-- 引入外部JS脚本文件 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const productInfo = {
+        "goods_id": 1,
+        "title": "南极人【10双装】夏季男士丝袜超薄中筒袜男袜子薄款透气纯色商务袜P3038",
+        "img_big_logo": "https://image5.suning.cn/uimg/b2c/newcatentries/0070081143-000000000144879464_2_800x800.jpg",
+        "price": "25.00",
+        "current_price": "17.50",
+        "is_sale": true,
+        "sale_type": 0.7,
+        "goods_introduce": "商品详细描述..." // 简化了商品描述
+      };
+
+      // 更新页面元素以显示产品信息
+      document.querySelector('.middleimg').src = productInfo.img_big_logo;
+      document.querySelector('.title').textContent = productInfo.title;
+      document.querySelector('.old').textContent = productInfo.price;
+      document.querySelector('.discount').textContent = `${productInfo.sale_type * 100}%`;
+      document.querySelector('.curprice').textContent = productInfo.current_price;
+      document.querySelector('.desc').innerHTML = productInfo.goods_introduce;
+    });
+  </script>
+</body>
+
+</html>

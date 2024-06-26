@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>个人中心</title>
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/form.css">
+</head>
+<body>
+  <div class="header container">
+    个人中心
+    <p style="display: block;">
+      <a href="./rpwd.html" id="changePwdLink">修改密码</a>
+      <a href="./index.html" id="homeLink">回到首页</a>
+    </p>
+  </div>
+  <div id="userProfile" style="display: none;">
+    <form id="editProfileForm">
+      <label>
+        用户名：<input type="text" class="username" disabled>
+      </label>
+      <label>
+        年龄：<input type="text" class="age">
+      </label>
+      <label>
+        性别：<select class='gender'>
+          <option value="">请选择</option>
+          <option value="男">男</option>
+          <option value="女">女</option>
+        </select>
+      </label>
+      <label>
+        昵称：<input type="text" class="nickname">
+      </label>
+      <button type="submit">确认修改</button>
+    </form>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var userLoggedIn = localStorage.getItem('userLoggedIn');
+      var userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
+      if (!userLoggedIn) {
+        alert('请先登录！');
+        window.location.href = 'login.html';
+      } else {
+        document.getElementById('userProfile').style.display = 'block';
+        document.querySelector('.username').value = userInfo ? userInfo.username : '';
+        document.querySelector('.age').value = userInfo ? userInfo.age : '';
+        document.querySelector('.gender').value = userInfo ? userInfo.gender : '';
+        document.querySelector('.nickname').value = userInfo ? userInfo.nickname : '';
+      }
+
+      document.getElementById('editProfileForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var age = document.querySelector('.age').value;
+        var gender = document.querySelector('.gender').value;
+        var nickname = document.querySelector('.nickname').value;
+
+        if (!age || !gender || !nickname) {
+          alert('请确保所有字段都填写完整！');
+          return;
+        }
+
+        var updatedUserInfo = { ...userInfo, age, gender, nickname };
+        localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+        alert('用户信息修改成功！');
+        // Optionally refresh the page or redirect
+      });
+    });
+  </script>
+</body>
+</html>
